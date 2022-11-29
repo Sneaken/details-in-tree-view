@@ -197,7 +197,6 @@ export class FileSystemProvider implements vscode.TreeDataProvider<Entry>, vscod
     this._config.showCTime = vscode.workspace.getConfiguration(PROJECT).get<boolean>(SHOW_C_TIME, true);
     this._config.showMTime = vscode.workspace.getConfiguration(PROJECT).get<boolean>(SHOW_M_TIME, true);
     this._config.showSize = vscode.workspace.getConfiguration(PROJECT).get<boolean>(SHOW_SIZE, true);
-    console.log("this._config => ", this._config);
   }
 
   get onDidChangeFile(): vscode.Event<vscode.FileChangeEvent[]> {
