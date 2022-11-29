@@ -1,0 +1,80 @@
+{
+  "name": "details-in-tree-view",
+  "displayName": "details in tree view",
+  "description": "show file size and last-modified in tree view",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.73.0"
+  },
+  "activationEvents": [
+    "onView:fileExplorer"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "fileExplorer",
+          "name": "File Explorer"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "yarn run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "yarn run compile && yarn run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.0.0",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.73.0",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "@vscode/test-electron": "^2.2.0",
+    "eslint": "^8.26.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.1.0",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@types/rimraf": "^3.0.2",
+    "dayjs": "^1.11.6",
+    "filesize": "^10.0.5",
+    "rimraf": "^3.0.2"
+  },
+  "configuration": {
+    "title": "details in tree view Plugin Configuration",
+    "properties": {
+      "detailsInTreeView.show": {
+        "type": "boolean",
+        "default": true,
+        "description": "whether to show additional information in explorer"
+      },
+      "detailsInTreeView.showCTime": {
+        "type": "boolean",
+        "default": true,
+        "description": "whether to show ctime"
+      },
+      "detailsInTreeView.showSize": {
+        "type": "boolean",
+        "default": true,
+        "description": "whether to show file size"
+      },
+      "detailsInTreeView.showMTime": {
+        "type": "boolean",
+        "default": true,
+        "description": "whether to show mtime"
+      },
+      "detailsInTreeView.timeTemplate": {
+        "type": "string",
+        "default": "YYYY/MM/DD HH:mm",
+        "description": "time format template"
+      }
+    }
+  }
+}
