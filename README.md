@@ -22,9 +22,13 @@ Calling out known issues can help limit users opening duplicate issues against y
 
 Users appreciate release notes as you update your extension.
 
-### 0.0.1
+## [0.0.2] - 2022-11-30
 
-Support show details in tree view
+* remove log
+
+## [0.0.1] - 2022-11-30
+
+* Support show ctime, file size, mtime in Explorer
 
 ---
 

@@ -2,7 +2,7 @@
   "name": "details-in-tree-view",
   "displayName": "details in tree view",
   "description": "show file size and last-modified in tree view",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.73.0"
   },

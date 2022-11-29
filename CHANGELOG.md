@@ -6,4 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-- Initial release
+## [0.0.2] - 2022-11-30
+
+- remove log
+
+## [0.0.1] - 2022-11-30
+
+- Support show ctime, file size, mtime in Explorer
