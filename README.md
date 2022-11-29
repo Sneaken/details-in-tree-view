@@ -1,7 +1,5 @@
 # details-in-tree-view README
 
-This is the README for your extension "details-in-tree-view". After writing up a brief description, we recommend including the following sections.
-
 ## Features
 
 show details in tree view
