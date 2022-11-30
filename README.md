@@ -20,7 +20,10 @@ Calling out known issues can help limit users opening duplicate issues against y
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+## [0.0.3] - 2022-11-30
+
+* show folder first in folder
+* fix ctime that stats.ctime is change time
 
 ## [0.0.2] - 2022-11-30
 
