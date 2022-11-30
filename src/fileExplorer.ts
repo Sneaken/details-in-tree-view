@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs";
-import * as rimraf from "rimraf";
 import { filesize } from "filesize";
 import * as dayjs from "dayjs";
 import {
@@ -13,118 +12,7 @@ import {
   SHOW_M_TIME,
   SHOW_SIZE,
 } from "./util/constant";
-
-//#region Utilities
-
-namespace _ {
-  function handleResult<T>(
-    resolve: (result: T) => void,
-    reject: (error: Error) => void,
-    error: Error | null | undefined,
-    result: T
-  ): void {
-    if (error) {
-      reject(massageError(error));
-    } else {
-      resolve(result);
-    }
-  }
-
-  function massageError(error: Error & { code?: string }): Error {
-    if (error.code === "ENOENT") {
-      return vscode.FileSystemError.FileNotFound();
-    }
-
-    if (error.code === "EISDIR") {
-      return vscode.FileSystemError.FileIsADirectory();
-    }
-
-    if (error.code === "EEXIST") {
-      return vscode.FileSystemError.FileExists();
-    }
-
-    if (error.code === "EPERM" || error.code === "EACCESS") {
-      return vscode.FileSystemError.NoPermissions();
-    }
-
-    return error;
-  }
-
-  export function checkCancellation(token: vscode.CancellationToken): void {
-    if (token.isCancellationRequested) {
-      throw new Error("Operation cancelled");
-    }
-  }
-
-  export function normalizeNFC(items: string): string;
-  export function normalizeNFC(items: string[]): string[];
-  export function normalizeNFC(items: string | string[]): string | string[] {
-    if (process.platform !== "darwin") {
-      return items;
-    }
-
-    if (Array.isArray(items)) {
-      return items.map((item) => item.normalize("NFC"));
-    }
-
-    return items.normalize("NFC");
-  }
-
-  export function readdir(path: string): Promise<string[]> {
-    return new Promise<string[]>((resolve, reject) => {
-      fs.readdir(path, (error, children) => handleResult(resolve, reject, error, normalizeNFC(children)));
-    });
-  }
-
-  export function stat(path: string): Promise<fs.Stats> {
-    return new Promise<fs.Stats>((resolve, reject) => {
-      fs.stat(path, (error, stat) => handleResult(resolve, reject, error, stat));
-    });
-  }
-
-  export function readfile(path: string): Promise<Buffer> {
-    return new Promise<Buffer>((resolve, reject) => {
-      fs.readFile(path, (error, buffer) => handleResult(resolve, reject, error, buffer));
-    });
-  }
-
-  export function writefile(path: string, content: Buffer): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      fs.writeFile(path, content, (error) => handleResult(resolve, reject, error, void 0));
-    });
-  }
-
-  export function exists(path: string): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      fs.exists(path, (exists) => handleResult(resolve, reject, null, exists));
-    });
-  }
-
-  export function rmrf(path: string): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      fs.rm;
-      rimraf(path, (error) => handleResult(resolve, reject, error, void 0));
-    });
-  }
-
-  export function mkdir(path: string): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      fs.mkdir(path, (error) => handleResult(resolve, reject, error, void 0));
-    });
-  }
-
-  export function rename(oldPath: string, newPath: string): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      fs.rename(oldPath, newPath, (error) => handleResult(resolve, reject, error, void 0));
-    });
-  }
-
-  export function unlink(path: string): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      fs.unlink(path, (error) => handleResult(resolve, reject, error, void 0));
-    });
-  }
-}
+import _ from "./util";
 
 export class FileStat implements vscode.FileStat {
   constructor(private fsStat: fs.Stats) {}
@@ -169,7 +57,6 @@ interface Entry {
   type: vscode.FileType;
 }
 
-//#endregion
 type ExplorerConfig = {
   show?: boolean;
   timeTemplate?: string;
@@ -186,6 +73,8 @@ type File = {
 
 export class FileSystemProvider implements vscode.TreeDataProvider<Entry>, vscode.FileSystemProvider {
   private _onDidChangeFile: vscode.EventEmitter<vscode.FileChangeEvent[]>;
+  private _onDidChangeTreeData: vscode.EventEmitter<Entry | undefined> = new vscode.EventEmitter<Entry | undefined>();
+  readonly onDidChangeTreeData: vscode.Event<Entry | undefined> = this._onDidChangeTreeData.event;
   private _data: Record<string, File> = {};
   private _config: ExplorerConfig = {};
   constructor() {
@@ -200,10 +89,12 @@ export class FileSystemProvider implements vscode.TreeDataProvider<Entry>, vscod
   }
 
   get onDidChangeFile(): vscode.Event<vscode.FileChangeEvent[]> {
+    console.log("onDidChangeFile => ", 3);
     return this._onDidChangeFile.event;
   }
 
   watch(uri: vscode.Uri, options: { recursive: boolean; excludes: string[] }): vscode.Disposable {
+    console.log("333 => ", 333);
     const watcher = fs.watch(
       uri.fsPath,
       { recursive: options.recursive },
@@ -227,6 +118,11 @@ export class FileSystemProvider implements vscode.TreeDataProvider<Entry>, vscod
     );
 
     return { dispose: () => watcher.close() };
+  }
+
+  refreshFile(element?: Entry) {
+    console.log("3 => ", 3);
+    this._onDidChangeTreeData.fire(element); // _onDidChangeFile.fire([{type: vscode.FileChangeType.Changed, uri: element}]);
   }
 
   stat(uri: vscode.Uri): vscode.FileStat | Thenable<vscode.FileStat> {
@@ -343,7 +239,7 @@ export class FileSystemProvider implements vscode.TreeDataProvider<Entry>, vscod
       const children = await this.readDirectory(element.uri);
       children.sort((a, b) => {
         if (a[1] === b[1]) {
-          return a[0].localeCompare(b[0]);
+            return a[0].localeCompare(b[0]);
         }
         return a[1] === vscode.FileType.Directory ? -1 : 1;
       });
