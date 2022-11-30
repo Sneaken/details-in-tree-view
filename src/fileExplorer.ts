@@ -239,7 +239,13 @@ export class FileSystemProvider implements vscode.TreeDataProvider<Entry>, vscod
       const children = await this.readDirectory(element.uri);
       children.sort((a, b) => {
         if (a[1] === b[1]) {
+          if (
+            (a[0].startsWith("index.") && b[0].startsWith("index.")) ||
+            (!a[0].startsWith("index.") && !b[0].startsWith("index."))
+          ) {
             return a[0].localeCompare(b[0]);
+          }
+          return a[0].startsWith("index.") ? -1 : 1;
         }
         return a[1] === vscode.FileType.Directory ? -1 : 1;
       });
