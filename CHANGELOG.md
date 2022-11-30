@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+- show folder first in folder
+
 ## [0.0.2] - 2022-11-30
 
 - remove log
