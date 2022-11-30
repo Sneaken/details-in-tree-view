@@ -7,6 +7,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [Unreleased]
 
 - show folder first in folder
+- fix ctime that stats.ctime is change time
 
 ## [0.0.2] - 2022-11-30
 

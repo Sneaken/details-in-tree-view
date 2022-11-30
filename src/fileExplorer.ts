@@ -156,7 +156,7 @@ export class FileStat implements vscode.FileStat {
   }
 
   get ctime(): number {
-    return this.fsStat.ctime.getTime();
+    return this.fsStat.birthtime.getTime();
   }
 
   get mtime(): number {
